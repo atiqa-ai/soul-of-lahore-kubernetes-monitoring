@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.env*
+.git/
+.vscode/
+.opencode/
+*.log
+dev-error.txt
+dev-output.txt
+dev-test-log.txt
+tsconfig.tsbuildinfo
+Dockerfile*
+.dockerignore
+*.md
+.DS_Store
+Thumbs.db
+start.ps1

@@ -1,0 +1,12 @@
+node_modules
+.next
+.opencode/
+*.log
+dev-error.txt
+dev-output.txt
+dev-test-log.txt
+tsconfig.tsbuildinfo
+.env
+.env.local
+.env.*.local
+p.env
