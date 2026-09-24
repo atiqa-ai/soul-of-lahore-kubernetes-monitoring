@@ -1,0 +1,78 @@
+# =============================================================================
+# Soul of Lahore - Docker Compose stack
+#
+# Services:
+#   - soul-of-lahore : the Next.js app (production build, non-root)
+#   - portainer      : lightweight GUI for monitoring containers/resources
+#
+# Auto-start behaviour:
+#   restart: unless-stopped keeps the containers running whenever the Docker
+#   engine is up. On a laptop, enable "Start Docker Desktop when you sign in"
+#   (Settings > General) so the stack comes back automatically after a reboot.
+#
+# Usage (from the project root):
+#   ./build.sh  |  .\build.ps1   -> build the image
+#   ./start.sh  |  .\start.ps1   -> start the stack
+#   ./stop.sh   |  .\stop.ps1    -> stop the stack
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # The Soul of Lahore application
+  # ---------------------------------------------------------------------------
+  soul-of-lahore:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        # NEXT_PUBLIC_* keys are baked into the client bundle at build time.
+        # They are read from .env.local (the scripts pass it as --env-file).
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+    image: soul-of-lahore:latest
+    container_name: soul-of-lahore
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - sol-net
+
+  # ---------------------------------------------------------------------------
+  # Monitoring: Portainer CE - web GUI for container status & resource usage.
+  # Open http://localhost:9000 after the stack starts (create admin on first
+  # visit, then connect the local Docker environment).
+  # ---------------------------------------------------------------------------
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      # Docker Desktop (Windows): named-pipe mount of the Docker Engine.
+      # On native Linux, replace this with a bind mount instead:
+      #   - /var/run/docker.sock:/var/run/docker.sock
+      - type: npipe
+        source: \\.\pipe\docker_engine
+        target: /var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - sol-net
+
+networks:
+  sol-net:
+    driver: bridge
+
+volumes:
+  portainer_data:

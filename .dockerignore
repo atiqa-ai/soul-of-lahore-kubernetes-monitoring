@@ -1,17 +1,40 @@
-node_modules/
-.next/
+# ------------------------------------------------------------
+# Soul of Lahore - Docker build context exclusions
+# Keep the context small and keep secrets out of the image.
+# ------------------------------------------------------------
+
+# Dependencies & build output
+node_modules
+.next
+*.tsbuildinfo
+
+# Version control
+.git
+
+# Environment files - never copy secrets into the image
 .env*
-.git/
-.vscode/
-.opencode/
+
+# Local dev logs/artifacts
 *.log
 dev-error.txt
 dev-output.txt
 dev-test-log.txt
-tsconfig.tsbuildinfo
-Dockerfile*
-.dockerignore
-*.md
+
+# Editor / tooling
+.vscode
+.opencode
+
+# Docker tooling (Dockerfile is read directly by the daemon)
+Dockerfile
+docker-compose*.yml
+
+# Helper scripts are not needed inside the image
+*.sh
+*.ps1
+
+# Documentation is not needed inside the image
+README.md
+
+# Misc
 .DS_Store
 Thumbs.db
-start.ps1

@@ -1,12 +1,24 @@
+# ------------------------------------------------------------
+# Soul of Lahore - git ignore rules
+# ------------------------------------------------------------
+
+# Dependencies & build output
 node_modules
 .next
+
+# Tooling
 .opencode/
 *.log
 dev-error.txt
 dev-output.txt
 dev-test-log.txt
 tsconfig.tsbuildinfo
+
+# Environment files - NEVER commit secrets
 .env
 .env.local
 .env.*.local
 p.env
+
+# Local Docker Compose overrides
+docker-compose.override.yml
