@@ -28,6 +28,10 @@ dev-test-log.txt
 Dockerfile
 docker-compose*.yml
 
+# Deployment / monitoring config (host-mounted only, not needed in the image)
+monitoring
+nginx
+
 # Helper scripts are not needed inside the image
 *.sh
 *.ps1
