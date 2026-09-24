@@ -60,12 +60,8 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      # Docker Desktop (Windows): named-pipe mount of the Docker Engine.
-      # On native Linux, replace this with a bind mount instead:
-      #   - /var/run/docker.sock:/var/run/docker.sock
-      - type: npipe
-        source: \\.\pipe\docker_engine
-        target: /var/run/docker.sock
+      # Native Linux: bind mount of the Docker Engine socket.
+      - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     networks:
       - sol-net
